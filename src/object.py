@@ -116,4 +116,4 @@ class Game:
                 print(" ",end="")
         print()
         for i in range(self.size):
-            print(f"{i+1}. ({self.maxcoordinate[i].x+1},{self.maxcoordinate[i].y+1}) {self.matrix[self.maxcoordinate[i].y][self.maxcoordinate[i].x]}")
+            print(f"{i+1}. ({self.maxcoordinate[i].x+1},{self.maxcoordinate[i].y+1})")

@@ -35,12 +35,29 @@ def stdin():
         sequence[i].val = random.randrange(10,40,5)
     return Game(size,width,height,mat,num,sequence)
 
+def txt_writer(path, game: Game):
+    with open(path, "w") as file:
+        file.write(str(game.max.val)+"\n")
+        for i in range(len(game.max.string)):
+            file.write(game.max.string[i])
+            if i%2 != 0:
+                file.write(" ")
+        file.write("\n")
+        for i in range(game.size):
+            file.write(f"{i+1}. ({game.maxcoordinate[i].x+1},{game.maxcoordinate[i].y+1})\n")
+        file.write("\n")
+        file.write(f"{(end-start)*1000:.2f} ms")
+
 if __name__ == "__main__":
     path = "file.txt"
-    # game = txt_reader(path)
-    game = stdin()
+    game = txt_reader(path)
+    # game = stdin()
     game.infoGame()
     start = time.time()
     game.solution()
     end = time.time()
     print(f"{(end-start)*1000:.2f} ms")
+    isPrintable = input("Apakah ingin menyimpan solusi?(y/n) ")
+    if (isPrintable == "Y" or isPrintable == "y"):
+        output = input("Masukkan nama file output: ")
+        txt_writer(output, game)
