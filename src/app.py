@@ -50,8 +50,8 @@ def txt_writer(path, game: Game):
 
 if __name__ == "__main__":
     path = "file.txt"
-    game = txt_reader(path)
-    # game = stdin()
+    # game = txt_reader(path)
+    game = stdin()
     game.infoGame()
     start = time.time()
     game.solution()

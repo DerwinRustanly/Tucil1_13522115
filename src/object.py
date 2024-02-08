@@ -22,9 +22,10 @@ class Sequence:
     def join(self, token):
         self.string += token
     
-    def countSubstring(self, substring):
-        count = 0; i = 0
-        while(i <= len(self.string) - len(substring)):
+    def isSubstring(self, substring):
+        i = 0
+        found = False
+        while(not(found) and i <= len(self.string) - len(substring)):
             check = True; j = 0
             while check and j < len(substring):
                 if self.string[i] == substring[j]:
@@ -32,15 +33,16 @@ class Sequence:
                 else:
                     check = False
             if check:
-                count += 1
+                found = True
             else:
                 i += 1
-        return count
+        return found
     
     def getPoint(self, list, num):
         point = 0
         for i in range(num):
-            point += self.countSubstring(list[i].string) * list[i].val
+            if self.isSubstring(list[i].string):
+                point += list[i].val
         return point
     
 class Game:
