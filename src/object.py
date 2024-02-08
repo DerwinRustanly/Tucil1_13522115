@@ -55,6 +55,7 @@ class Game:
         self.sequence = sequence
         self.current = Sequence("",0)
         self.max = Sequence("",0)
+        self.maxlen = size
         self.coordinate = [Coordinate(-99,-99) for i in range(self.size)]
         self.maxcoordinate = [Coordinate(-99,-99) for i in range(self.size)]
     
@@ -75,47 +76,62 @@ class Game:
             print(f",{self.sequence[i].val})")  
 
 
-    def search(self, isVertical, idx, pivot, buffer):
-        if idx == self.size: 
+    def search(self, isVertical, idx, pivot, buffer, target):
+        if idx == target:
             self.current.string = "".join(buffer)
             self.current.val = self.current.getPoint(self.sequence, self.num)
-            # print(self.current.string)
-
-            if self.current.val > self.max.val:
+            if self.current.val >= self.max.val:
                 self.max.string = self.current.string
                 self.max.val = self.current.val
-                for i in range(self.size):
-                    self.maxcoordinate[i] = self.coordinate[i]
-                # if self.max.val > 0 : print(self.max.val)
+                self.maxlen = len(self.max.string)
+                # print(self.maxlen)
+                self.maxcoordinate = self.coordinate.copy()
             return None
+            # # print(self.current.string)
 
+                
+        # if idx == self.size: 
+        #     # self.current.string = "".join(buffer)
+        #     # self.current.val = self.current.getPoint(self.sequence, self.num)
+        #     # # print(self.current.string)
+
+        #     # if self.current.val > self.max.val:
+        #     #     self.max.string = self.current.string
+        #     #     self.max.val = self.current.val
+        #     #     self.maxcoordinate = self.coordinate.copy()
+        #     return None
+                    
         if isVertical:
             for i in range(self.height):
                 currentCoordinate = Coordinate(pivot, i)
                 if not(Coordinate.isMember(currentCoordinate, self.coordinate)):
                     buffer[idx] = self.matrix[i][pivot]
                     self.coordinate[idx] = currentCoordinate
-                    self.search(not(isVertical),idx+1, i, buffer)
+                    self.search(not(isVertical),idx+1, i, buffer, target)
         else:
             for j in range(self.width):
                 currentCoordinate = Coordinate(j,pivot)
                 if not(Coordinate.isMember(currentCoordinate, self.coordinate)):
                     buffer[idx] = self.matrix[pivot][j]
                     self.coordinate[idx] = currentCoordinate
-                    self.search(not(isVertical),idx+1, j, buffer)
+                    self.search(not(isVertical),idx+1, j, buffer, target)
     
     def solution(self):
-        buffer = ["" for i in range(self.size)]
-        for j in range(self.width):
-            isVertical = True
-            buffer[0] = self.matrix[0][j] 
-            self.coordinate[0] = Coordinate(j,0)
-            self.search(isVertical, 1,j, buffer)
+        for k in range(self.size,1,-1):
+            buffer = ["" for i in range(self.size)]
+            for j in range(self.width):
+                isVertical = True
+                buffer[0] = self.matrix[0][j] 
+                self.coordinate[0] = Coordinate(j,0)
+                self.search(isVertical, 1,j, buffer,k)
+
+
         print(self.max.val)
-        for i in range(len(self.max.string)):
-            print(self.max.string[i],end = "")
-            if i%2 != 0:
-                print(" ",end="")
-        print()
-        for i in range(self.size):
-            print(f"{i+1}. ({self.maxcoordinate[i].x+1},{self.maxcoordinate[i].y+1})")
+        if(self.max.val != 0):
+            for i in range(len(self.max.string)):
+                print(self.max.string[i],end = "")
+                if i%2 != 0:
+                    print(" ",end="")
+            print()
+            for i in range(self.maxlen//2):
+                print(f"{i+1}. ({self.maxcoordinate[i].x+1},{self.maxcoordinate[i].y+1})")

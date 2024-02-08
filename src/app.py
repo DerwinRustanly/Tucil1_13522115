@@ -22,8 +22,17 @@ def txt_reader(path):
 
 def stdin():
     numToken = int(input("Masukkan jumlah token unik: "))
+    while numToken <= 0:
+        print("Jumlah token unik setidaknya 1")
+        numToken = int(input("Masukkan jumlah token unik: "))
     listToken = input("Masukkan token: ").split()
+    while len(listToken) != numToken:
+        print("Harap masukkan token dengan jumlah yang sesuai")
+        listToken = input("Masukkan token: ").split()
     size = int(input("Masukkan ukuran buffer: "))
+    while size <= 0:
+        print("Ukuran buffer setidaknya 1")
+        size = int(input("Masukkan ukuran buffer: "))
     width,height = map(int,input("Masukkan ukuran matriks dalam format m n: ").split())
     mat = [[listToken[random.randint(0,numToken-1)] for j in range(width)] for i in range(height)]
     num = int(input("Masukkan jumlah sekuens: "))
@@ -50,8 +59,8 @@ def txt_writer(path, game: Game):
 
 if __name__ == "__main__":
     path = "file.txt"
-    # game = txt_reader(path)
-    game = stdin()
+    game = txt_reader(path)
+    # game = stdin()
     game.infoGame()
     start = time.time()
     game.solution()
