@@ -55,7 +55,7 @@ class Game:
         self.sequence = sequence
         self.current = Sequence("",0)
         self.max = Sequence("",0)
-        self.maxlen = size
+        self.maxlen = size*2
         self.coordinate = [Coordinate(-99,-99) for i in range(self.size)]
         self.maxcoordinate = [Coordinate(-99,-99) for i in range(self.size)]
     
@@ -80,14 +80,12 @@ class Game:
         if idx == target:
             self.current.string = "".join(buffer)
             self.current.val = self.current.getPoint(self.sequence, self.num)
-            if self.current.val >= self.max.val:
+            if self.current.val >= self.max.val and len(self.current.string) <= self.maxlen:
                 self.max.string = self.current.string
                 self.max.val = self.current.val
                 self.maxlen = len(self.max.string)
-                # print(self.maxlen)
                 self.maxcoordinate = self.coordinate.copy()
             return None
-            # # print(self.current.string)
 
                 
         # if idx == self.size: 
