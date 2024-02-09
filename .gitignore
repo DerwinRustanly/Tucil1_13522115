@@ -1,7 +1,7 @@
 # Wrong Gui
-src/frontend/gui.py
-src/frontend/tes.py
-src/frontend/test.py
+src/backend/gui.py
+src/backend/tes.py
+src/backend/test.py
 
 # Node Module
 src/frontend/node_modules
