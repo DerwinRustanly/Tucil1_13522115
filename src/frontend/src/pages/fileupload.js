@@ -85,7 +85,7 @@ export default function FileUpload() {
         ></ReactTyped>
         <div className="border-baseYellow w-full border-4 bg-zinc-900 rounded-lg font-semibold text-lg">
           <div className="bg-baseYellow w-full text-black px-4 py-2 font-bold">
-            .txt File
+            File.txt
           </div>
           <p className="bg-zinc-900 p-4">
             buffer_size
