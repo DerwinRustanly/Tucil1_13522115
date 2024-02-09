@@ -206,7 +206,7 @@ export default function FileUpload() {
             <div className="px-4 py-2 flex font-semibold">
               {coordinates.map((coordinate, index) => (
                 <div className="p-2" key={index}>
-                  {`${index + 1}. (${coordinate[0]},${coordinate[1]})`}
+                  {`${index + 1}. (${coordinate[1]+1},${coordinate[0]+1})`}
                 </div>
               ))}
             </div>
