@@ -47,6 +47,7 @@ export default function FileUpload() {
 
   const handleUpload = async () => {
     try {
+      setResultBarOpen(false)
       const formData = new FormData();
       formData.append("file", file);
 

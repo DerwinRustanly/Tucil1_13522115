@@ -8,6 +8,9 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
+dir = 'static'
+os.makedirs(dir, exist_ok=True)
+
 @app.route('/upload', methods=['POST'])
 def upload_file():
     # Check if the POST request contains a file
@@ -22,8 +25,9 @@ def upload_file():
 
     # Save the uploaded file locally
     print("name: " + file.filename)
-    file.save(file.filename)
-    game = txt_reader(file.filename)
+    file_name = dir+'/'+file.filename
+    file.save(file_name)
+    game = txt_reader(file_name)
     start = time.time()
     game.solution()
     end = time.time()

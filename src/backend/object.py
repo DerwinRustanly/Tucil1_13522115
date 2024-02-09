@@ -133,3 +133,6 @@ class Game:
             print()
             for i in range(self.maxlen//2):
                 print(f"{i+1}. ({self.maxcoordinate[i].x+1},{self.maxcoordinate[i].y+1})")
+        else:
+            self.maxlen = 0
+            self.max.string = ""
