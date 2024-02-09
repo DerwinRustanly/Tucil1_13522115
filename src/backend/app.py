@@ -44,6 +44,34 @@ def upload_file():
     }   
     return jsonify(response), 200
 
+@app.route('/save', methods=['POST'])
+def save_file():
+    data = request.get_json()
+    file = data.get('filename')
+    reward = data.get('reward')
+    buffer = data.get('buffer')
+    coordinates = data.get('coordinates')
+    duration = data.get('duration')
+    if file == "" or reward == None or buffer == [] or coordinates == []:
+        return jsonify({'error': 'Missing filename, reward, buffer, or coordinates'}), 400
+    file = "../../test/output/"+file
+    with open(file, 'w') as savefile:
+        savefile.write(str(reward)+"\n")
+        for token in buffer:
+            savefile.write(token)
+            savefile.write(" ")
+        savefile.write("\n")
+        for coordinate in coordinates:
+            savefile.write("("+str(coordinate[1]+1)+","+str(coordinate[0]+1)+")")
+        savefile.write("\n")
+        savefile.write(str(duration) + "ms")
+
+    print(reward)
+    print(buffer)
+    print(coordinates)
+    print(duration)
+    return jsonify({'message': 'File saved successfully'}), 200
+
 def txt_reader(path):
     with open(path, "r") as file:
         size = int(file.readline())
