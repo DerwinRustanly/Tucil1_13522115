@@ -58,7 +58,7 @@ def txt_writer(path, game: Game):
         file.write(f"{(end-start)*1000:.2f} ms")
 
 if __name__ == "__main__":
-    path = "../test/input/file.txt"
+    path = "../../test/input/file.txt"
     game = txt_reader(path)
     # game = stdin()
     game.infoGame()
@@ -69,4 +69,4 @@ if __name__ == "__main__":
     isPrintable = input("Apakah ingin menyimpan solusi?(y/n) ")
     if (isPrintable == "Y" or isPrintable == "y"):
         output = input("Masukkan nama file output: ")
-        txt_writer("../test/output/"+output, game)
+        txt_writer("../../test/output/"+output, game)
