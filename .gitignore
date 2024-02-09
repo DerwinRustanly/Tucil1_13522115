@@ -5,3 +5,7 @@ src/backend/test.py
 
 # Node Module
 src/frontend/node_modules
+
+# Environment
+src/backend/venv
+src/backend/env

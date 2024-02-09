@@ -2,6 +2,43 @@ import os
 import random
 import time
 from object import Sequence, Game
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+
+app = Flask(__name__)
+CORS(app)
+
+@app.route('/upload', methods=['POST'])
+def upload_file():
+    # Check if the POST request contains a file
+    if 'file' not in request.files:
+        return jsonify({'error': 'No file part'}), 400
+    
+    file = request.files['file']
+
+    # If the user does not select a file, the browser may send an empty file without a filename
+    if file.filename == '':
+        return jsonify({'error': 'No selected file'}), 400
+
+    # Save the uploaded file locally
+    print("name: " + file.filename)
+    file.save(file.filename)
+    game = txt_reader(file.filename)
+    start = time.time()
+    game.solution()
+    end = time.time()
+    dur = (end-start)*1000
+    response = {
+        'sequences' : [[[game.sequence[i].string[j:j+2] for j in range(0,len(game.sequence[i].string),2)], game.sequence[i].val] for i in range(len(game.sequence))] ,
+        'width': game.width,
+        'height': game.height,
+        'matrix' : game.matrix,
+        'maxbuffer' : [game.max.string[i:i+2] for i in range(0,len(game.max.string),2)],
+        'maxvalue' : game.max.val,
+        'maxcoordinate' : [(game.maxcoordinate[i].y, game.maxcoordinate[i].x) for i in range(game.maxlen//2)],
+        'duration' : dur
+    }   
+    return jsonify(response), 200
 
 def txt_reader(path):
     with open(path, "r") as file:

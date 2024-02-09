@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom"
 export default function Navbar(){
     return(
-        <div className="fixed w-full">
+        <div className="fixed w-full bg-black z-40">
             <div className='md:flex items-center justify-between font-primary font-medium text-baseYellow text-2xl cursor-pointer p-4 border-b-[6px] border-b-baseYellow shadow-md shadow-baseYellow'>
                 <h1 className="text-4xl font-bold">Cyberpunk Breach Protocol Solver</h1>
                 <ul className="flex gap-10">
