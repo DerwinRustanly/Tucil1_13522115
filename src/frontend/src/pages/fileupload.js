@@ -17,20 +17,21 @@ export default function FileUpload() {
   const [saveBarOpen, setSaveBarOpen] = useState(false);
   const [saveFilename, setSaveFile] = useState(null);
   const [isLoading, setLoading] = useState(false);
+  const [isCompleted, setCompleted] = useState(false)
   const fileInputRef = useRef(null);
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
     if (file) {
-        setUploadedFileName(file.name);
-      } else {
-        setUploadedFileName("No File Uploaded");
-      }
+      setUploadedFileName(file.name);
+    } else {
+      setUploadedFileName("No File Uploaded");
+    }
   };
 
   useEffect(() => {
     if (file) {
       setUploadedFileName(file.name);
-      fileInputRef.current.value = ""
+      fileInputRef.current.value = "";
     } else {
       setUploadedFileName("No File Uploaded");
     }
@@ -53,7 +54,7 @@ export default function FileUpload() {
     console.log(coordinates);
     console.log("durations: ");
     console.log(duration);
-  }, [matrix, buffer, reward, coordinates, duration, height, width,sequences]);
+  }, [matrix, buffer, reward, coordinates, duration, height, width, sequences]);
 
   const handleUpload = async () => {
     try {
@@ -82,6 +83,8 @@ export default function FileUpload() {
       setDuration(data.duration.toFixed(2));
       setResultBarOpen(true);
       setLoading(false);
+      setCompleted(true)
+      setTimeout(()=>setCompleted(false), 5000)
       // Handle successful upload
     } catch (error) {
       // Handle error
@@ -90,23 +93,31 @@ export default function FileUpload() {
 
   const handleSave = async (filename) => {
     try {
-      setLoading(true)
+      setLoading(true);
       const response = await fetch("http://localhost:5000/save", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ filename, reward, buffer, coordinates, duration}),
+        body: JSON.stringify({
+          filename,
+          reward,
+          buffer,
+          coordinates,
+          duration,
+        }),
       });
 
       if (response.ok) {
         console.log("File Saved Succesfully");
-        setSaveBarOpen(false)
-        setResultBarOpen(false)
-        setFile(null)
-        setUploadedFileName("")
-        setSaveFile("")
-        setLoading(false)
+        setSaveBarOpen(false);
+        setResultBarOpen(false);
+        setFile(null);
+        setUploadedFileName("");
+        setSaveFile("");
+        setLoading(false);
+        setCompleted(true)
+        setTimeout(()=>setCompleted(false), 5000)
       }
     } catch (error) {}
   };
@@ -253,7 +264,7 @@ export default function FileUpload() {
             </p>
             <div className="flex justify-center">
               <button
-                onClick={()=>setSaveBarOpen(true)}
+                onClick={() => setSaveBarOpen(true)}
                 className="font-semibold text-lg mt-4 py-4 px-6 border-2 bg-no-repeat bg-left bg-[length:0%] bg-gradient-to-r from-yellow-200 to-baseYellow hover:bg-[length:100%]  hover:text-black hover:border-black border-baseYellow rounded-2xl hover:scale-105 transition-all ease-in-out duration-500"
               >
                 Save Result
@@ -299,7 +310,9 @@ export default function FileUpload() {
         id="authentication-modal"
         tabindex="-1"
         aria-hidden="true"
-        class={`${saveBarOpen?"flex":"hidden"} overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full`}
+        class={`${
+          saveBarOpen ? "flex" : "hidden"
+        } overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full`}
       >
         <div class="relative p-4 w-full max-w-md max-h-full">
           {/* <!-- Modal content --> */}
@@ -313,7 +326,9 @@ export default function FileUpload() {
                 type="button"
                 class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
                 data-modal-hide="authentication-modal"
-                onClick={() => {setSaveBarOpen(false)}}
+                onClick={() => {
+                  setSaveBarOpen(false);
+                }}
               >
                 <svg
                   class="w-3 h-3"
@@ -337,9 +352,7 @@ export default function FileUpload() {
             <div class="p-4 md:p-5">
               <form class="space-y-4" action="#">
                 <div>
-                  <label
-                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-baseYellow"
-                  >
+                  <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-baseYellow">
                     Your File Output
                   </label>
                   <input
@@ -347,14 +360,20 @@ export default function FileUpload() {
                     placeholder="output.txt"
                     required
                     value={saveFilename}
-                    onChange={(e)=>{setSaveFile(e.target.value)}}
+                    onChange={(e) => {
+                      setSaveFile(e.target.value);
+                    }}
                   />
                 </div>
                 <div className="flex justify-center">
                   <button
                     type="submit"
                     class="font-semibold text-lg mt-4 py-4 px-6 border-2 bg-no-repeat bg-left bg-[length:0%] bg-gradient-to-r from-yellow-200 to-baseYellow hover:bg-[length:100%]  hover:text-black hover:border-black border-baseYellow rounded-2xl hover:scale-105 transition-all ease-in-out duration-500"
-                    onClick={(e) => {e.preventDefault(); handleSave(saveFilename)}}>
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleSave(saveFilename);
+                    }}
+                  >
                     Save Result
                   </button>
                 </div>
@@ -363,7 +382,20 @@ export default function FileUpload() {
           </div>
         </div>
       </div>
-      <Loading isLoading={isLoading}/>
+      <Loading isLoading={isLoading} />
+      {isCompleted && <div id="popup-modal" tabindex="-1" class="flex overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                <div class="relative p-4 w-full max-w-md max-h-full">
+                    <div class="relative flex flex-col justify-center items-center bg-white rounded-lg shadow dark:bg-zinc-900 border-2 border-baseYellow">
+                        <ReactTyped className="text-2xl font-bold py-4 mt-4" strings={['Loading Completed']} typeSpeed={40}/>
+                        <div role="status" className="p-12 mt-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-24 h-24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                            </svg>
+                        </div>
+                        <button class="px-3 py-1 my-5 w-[40%] font-semibold leading-none text-center rounded-full hover:scale-105 transition-all ease-in-out duration-200 dark:bg-baseYellow dark:text-black" onClick={()=>setCompleted(false)}>Close</button>
+                    </div>
+                </div>
+            </div>}
     </div>
   );
 }

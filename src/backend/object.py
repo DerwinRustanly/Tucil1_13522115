@@ -23,27 +23,10 @@ class Sequence:
         self.string += token
     
     def isSubstring(self, substring):
-        i = 0
-        found = False
-        while(not(found) and i <= len(self.string) - len(substring)):
-            check = True; j = 0
-            while check and j < len(substring):
-                if self.string[i] == substring[j]:
-                    j += 1; i += 1
-                else:
-                    check = False
-            if check:
-                found = True
-            else:
-                i += 1
-        return found
-    
+        return substring in self.string
+
     def getPoint(self, list, num):
-        point = 0
-        for i in range(num):
-            if self.isSubstring(list[i].string):
-                point += list[i].val
-        return point
+        return sum(item.val for item in list if self.isSubstring(item.string))
     
 class Game:
     def __init__(self, size, width, height, matrix, num, sequence):
@@ -100,14 +83,14 @@ class Game:
         #     return None
                     
         if isVertical:
-            for i in range(self.height):
+            for i in range(self.height-1,-1,-1):
                 currentCoordinate = Coordinate(pivot, i)
                 if not(Coordinate.isMember(currentCoordinate, self.coordinate)):
                     buffer[idx] = self.matrix[i][pivot]
                     self.coordinate[idx] = currentCoordinate
                     self.search(not(isVertical),idx+1, i, buffer, target)
         else:
-            for j in range(self.width):
+            for j in range(self.width-1,-1,-1):
                 currentCoordinate = Coordinate(j,pivot)
                 if not(Coordinate.isMember(currentCoordinate, self.coordinate)):
                     buffer[idx] = self.matrix[pivot][j]
@@ -117,7 +100,7 @@ class Game:
     def solution(self):
         for k in range(self.size,1,-1):
             buffer = ["" for i in range(self.size)]
-            for j in range(self.width):
+            for j in range(self.width-1,-1,-1):
                 isVertical = True
                 buffer[0] = self.matrix[0][j] 
                 self.coordinate[0] = Coordinate(j,0)
