@@ -6,7 +6,9 @@
 - **NIM : 13522115**
 - **Kelas : K1**
 ## Deskripsi Program
-Permainan Breach Protocol merupakan salah satu sub permainan dari permainan video daring yang berjudul Cyberpunk 2077. Repositori ini mensimulasikan algoritma penyelesaian dari permainan meretas Breach Protocol (Breach Protocol Hacking) dengan memanfaatkan algoritma <b> brute force </b>. Program yang dibentuk merupakan aplikasi berbasis web yang dibangun berdasarkan *framework* **React** dan **Flask**, serta program menggunakan bahasa pemrograman **Python**. 
+Permainan Breach Protocol merupakan salah satu sub permainan dari permainan video daring yang berjudul Cyberpunk 2077. Secara sederhana aturan dari permainan ini adalah mengoptimalkan pencocokan pola token pada matriks dan sekuens berbobot hadiah variatif dengan memanfaatkan buffer yang memiliki batasan ukuran tertentu baik secara horizontal dan vertikal secara bergantian. Tujuan utama dari permainan ini adalah memaksimalkan bobot hadiah yang diperoleh pada buffer dengan memanfaatkan langkah yang seminimum mungkin. 
+
+Repositori ini mensimulasikan algoritma penyelesaian dari permainan meretas Breach Protocol (Breach Protocol Hacking) dengan memanfaatkan algoritma <b> brute force </b>. Program yang dibentuk merupakan aplikasi berbasis web yang dibangun berdasarkan *framework* **React** dan **Flask**, serta program menggunakan bahasa pemrograman **Python**. 
 
 
 ## Setup dan Requirements Program
