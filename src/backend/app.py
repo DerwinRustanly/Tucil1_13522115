@@ -44,6 +44,49 @@ def upload_file():
     }   
     return jsonify(response), 200
 
+@app.route('/input', methods=['POST'])
+def input_random():
+    input_data = request.get_json()
+    numToken = int(input_data.get("numToken"))
+    listToken = input_data.get("listToken").split(" ")
+    size = int(input_data.get("size"))
+    width = int(input_data.get("width"))
+    height = int(input_data.get("height"))
+    num = int(input_data.get("num"))
+    seqSize = int(input_data.get("seqSize"))
+    if numToken <= 0 or numToken == None or listToken == [] or listToken == None or size <= 0 or size == None or width <= 0 or width == None or height <= 0 or height == None or num <= 0 or num == None or seqSize <= 0 or seqSize == None:
+        return jsonify({'error': 'Missing filename, reward, buffer, or coordinates'}), 400
+    mat = [[listToken[random.randint(0,numToken-1)] for j in range(width)] for i in range(height)]
+    sequence = [Sequence("",0) for i in range(num)]
+    for i in range(num):
+        check = False
+        temp = Sequence("",0)
+        while(not(check)):
+            for j in range(random.randint(2,seqSize)):
+                temp.string += listToken[random.randint(0,numToken-1)]
+            temp.val = random.randrange(10,40,5)
+            if temp not in sequence:
+                check = True
+        sequence[i].string = temp.string
+        sequence[i].val = temp.val
+    game = Game(size,width,height,mat,num,sequence)
+    start = time.time()
+    game.solution()
+    end = time.time()
+    dur = (end-start)*1000
+    response = {
+        'sequences' : [[[game.sequence[i].string[j:j+2] for j in range(0,len(game.sequence[i].string),2)], game.sequence[i].val] for i in range(len(game.sequence))] ,
+        'width': game.width,
+        'height': game.height,
+        'matrix' : game.matrix,
+        'maxbuffer' : [game.max.string[i:i+2] for i in range(0,len(game.max.string),2)],
+        'maxvalue' : game.max.val,
+        'maxcoordinate' : [(game.maxcoordinate[i].y, game.maxcoordinate[i].x) for i in range(game.maxlen//2)],
+        'duration' : dur
+    }   
+    return jsonify(response), 200
+
+
 @app.route('/save', methods=['POST'])
 def save_file():
     data = request.get_json()
@@ -62,7 +105,7 @@ def save_file():
             savefile.write(" ")
         savefile.write("\n")
         for coordinate in coordinates:
-            savefile.write("("+str(coordinate[1]+1)+","+str(coordinate[0]+1)+")")
+            savefile.write("("+str(coordinate[1]+1)+","+str(coordinate[0]+1)+")\n")
         savefile.write("\n")
         savefile.write(str(duration) + "ms")
 
@@ -108,9 +151,16 @@ def stdin():
     sequence = [Sequence("",0) for i in range(num)]
     seqSize = int(input("Masukkan ukuran maksimal sekuens: "))
     for i in range(num):
-        for j in range(random.randint(2,seqSize)):
-            sequence[i].string += listToken[random.randint(0,numToken-1)]
-        sequence[i].val = random.randrange(10,40,5)
+        check = False
+        temp = Sequence("",0)
+        while(not(check)):
+            for j in range(random.randint(2,seqSize)):
+                temp.string += listToken[random.randint(0,numToken-1)]
+            temp.val = random.randrange(10,40,5)
+            if temp not in sequence:
+                check = True
+        sequence[i].string = temp.string
+        sequence[i].val = temp.val
     return Game(size,width,height,mat,num,sequence)
 
 def txt_writer(path, game: Game):
@@ -128,8 +178,8 @@ def txt_writer(path, game: Game):
 
 if __name__ == "__main__":
     path = "../../test/input/file.txt"
-    game = txt_reader(path)
-    # game = stdin()
+    # game = txt_reader(path)
+    game = stdin()
     game.infoGame()
     start = time.time()
     game.solution()

@@ -10,6 +10,7 @@ import {
 import Home from './pages/home';
 import Menu from './pages/menu';
 import FileUpload from './pages/fileupload';
+import InputManual from './pages/inputmanual';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -21,6 +22,8 @@ root.render(
               <Route path="/" element={<Home />} />
               <Route path="/menu" element={<Menu />} />
               <Route path="/fileupload" element={<FileUpload />} />
+              <Route path="/inputmanual" element={<InputManual />} />
+
           </Routes>
       </Router>
       </div>

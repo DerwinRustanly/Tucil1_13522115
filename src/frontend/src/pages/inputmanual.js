@@ -2,11 +2,14 @@ import { ReactTyped } from "react-typed";
 import { useState, useEffect, useRef } from "react";
 import Loading from "../components/loading";
 
-export default function FileUpload() {
-  const [file, setFile] = useState(null);
-  const [uploadedFileName, setUploadedFileName] = useState("");
-  const [width, setWidth] = useState(null);
-  const [height, setHeight] = useState(null);
+export default function InputManual() {
+  const [numToken, setNumToken] = useState("");
+  const [listToken, setListToken] = useState("");
+  const [size, setSize] = useState("");
+  const [num, setNum] = useState("");
+  const [seqSize, setSeqSize] = useState("");
+  const [width, setWidth] = useState("");
+  const [height, setHeight] = useState("");
   const [matrix, setMatrix] = useState(null);
   const [buffer, setBuffer] = useState(null);
   const [reward, setReward] = useState(null);
@@ -17,25 +20,7 @@ export default function FileUpload() {
   const [saveBarOpen, setSaveBarOpen] = useState(false);
   const [saveFilename, setSaveFile] = useState(null);
   const [isLoading, setLoading] = useState(false);
-  const [isCompleted, setCompleted] = useState(false)
-  const fileInputRef = useRef(null);
-  const handleFileChange = (event) => {
-    setFile(event.target.files[0]);
-    if (file) {
-      setUploadedFileName(file.name);
-    } else {
-      setUploadedFileName("No File Uploaded");
-    }
-  };
-
-  useEffect(() => {
-    if (file) {
-      setUploadedFileName(file.name);
-      fileInputRef.current.value = "";
-    } else {
-      setUploadedFileName("No File Uploaded");
-    }
-  }, [file, uploadedFileName]);
+  const [isCompleted, setCompleted] = useState(false);
 
   useEffect(() => {
     console.log("sequences: ");
@@ -56,16 +41,24 @@ export default function FileUpload() {
     console.log(duration);
   }, [matrix, buffer, reward, coordinates, duration, height, width, sequences]);
 
-  const handleUpload = async () => {
+  const handleInput = async () => {
     try {
       setResultBarOpen(false);
       setLoading(true);
-      const formData = new FormData();
-      formData.append("file", file);
-
-      const response = await fetch("http://127.0.0.1:5000/upload", {
+      const response = await fetch("http://127.0.0.1:5000/input", {
         method: "POST",
-        body: formData,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          numToken,
+          listToken,
+          size,
+          width,
+          height,
+          num,
+          seqSize
+        }),
       });
 
       if (!response.ok) {
@@ -74,8 +67,6 @@ export default function FileUpload() {
 
       const data = await response.json();
       setSequences(data.sequences);
-      setWidth(data.width);
-      setHeight(data.height);
       setMatrix(data.matrix);
       setBuffer(data.maxbuffer);
       setCoordinates(data.maxcoordinate);
@@ -83,8 +74,8 @@ export default function FileUpload() {
       setDuration(data.duration.toFixed(2));
       setResultBarOpen(true);
       setLoading(false);
-      setCompleted(true)
-      setTimeout(()=>setCompleted(false), 5000)
+      setCompleted(true);
+      setTimeout(() => setCompleted(false), 5000);
       // Handle successful upload
     } catch (error) {
       // Handle error
@@ -112,12 +103,17 @@ export default function FileUpload() {
         console.log("File Saved Succesfully");
         setSaveBarOpen(false);
         setResultBarOpen(false);
-        setFile(null);
-        setUploadedFileName("");
+        setNumToken("");
+        setListToken("");
+        setSize("");
+        setNum("");
+        setSeqSize("");
+        setWidth("");
+        setHeight("");
         setSaveFile("");
         setLoading(false);
-        setCompleted(true)
-        setTimeout(()=>setCompleted(false), 5000)
+        setCompleted(true);
+        setTimeout(() => setCompleted(false), 5000);
       }
     } catch (error) {}
   };
@@ -127,84 +123,117 @@ export default function FileUpload() {
       <div className="flex p-4 mt-24">
         <ReactTyped
           className="text-3xl w-[500px] p-12 font-bold uppercase z-10"
-          strings={["Please Upload a Txt File with the Following Format:"]}
+          strings={["Please Complete The Following Form:"]}
           typeSpeed={40}
         ></ReactTyped>
-        <div className="border-baseYellow w-full border-4 bg-zinc-900 rounded-lg font-semibold text-lg">
-          <div className="bg-baseYellow w-full text-black px-4 py-2 font-bold">
-            File.txt
-          </div>
-          <p className="bg-zinc-900 p-4">
-            buffer_size
-            <br />
-            matrix_width matrix_height
-            <br />
-            matrix
-            <br />
-            number_of_sequences
-            <br />
-            sequences_1
-            <br />
-            sequences_1_reward
-            <br />
-            sequences_2
-            <br />
-            sequences_2_reward
-            <br />
-            …<br />
-            sequences_n
-            <br />
-            sequences_n_reward
-            <br />
-          </p>
-        </div>
-      </div>
-
-      <div class="flex items-center justify-center w-full">
-        <label
-          for="dropzone-file"
-          class="flex flex-col items-center justify-center w-[50%] h-64 border-2 border-baseYellow border-dashed rounded-lg cursor-pointer bg-zinc-900 hover:bg-zinc-800 "
-        >
-          <div class="flex flex-col items-center justify-center pt-5 pb-6">
-            <svg
-              class="w-8 h-8 mb-4 text-baseYellow"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 20 16"
+        <form class="max-w-md mx-auto border-2 border-baseYellow p-8 rounded-xl">
+          <div class="relative z-0 w-full mb-5 group">
+            <input
+              class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-baseYellow focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+              placeholder=" "
+              required
+              onChange={(e)=>setNumToken(e.target.value)}
+              value={numToken}
+            />
+            <label
+              class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-baseYellow peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
             >
-              <path
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
-              />
-            </svg>
-            <p class="mb-2 text-sm text-baseYellow">
-              <span class="font-semibold">Click to upload</span>
-            </p>
-            <p class="text-xs text-baseYellow">Please Upload a TXT File</p>
+              Number of Tokens
+            </label>
           </div>
-          <input
-            id="dropzone-file"
-            type="file"
-            class="hidden"
-            ref={fileInputRef}
-            onChange={handleFileChange}
-            accept=".txt"
-          />
-          {uploadedFileName && (
-            <p className="text-baseYellow">
-              <span className="font-semibold">Uploaded file:</span>{" "}
-              {uploadedFileName}
-            </p>
-          )}
-        </label>
+          <div class="relative z-0 w-full mb-5 group">
+            <input
+              class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-baseYellow focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+              placeholder=" "
+              required
+              onChange={(e)=>setListToken(e.target.value)}
+              value ={listToken}
+            />
+            <label
+              class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-baseYellow peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+            >
+              Tokens
+            </label>
+          </div>
+          <div class="relative z-0 w-full mb-5 group">
+            <input
+              class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-baseYellow focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+              placeholder=" "
+              required
+              onChange={(e)=>setSize(e.target.value)}
+              value={size}
+            />
+            <label
+              class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-baseYellow peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+            >
+              Buffer Size
+            </label>
+          </div>
+          <div class="grid md:grid-cols-2 md:gap-6">
+            <div class="relative z-0 w-full mb-5 group">
+              <input
+                type="text"
+                class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-baseYellow focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                placeholder=" "
+                onChange={(e)=>setWidth(e.target.value)}
+                value={width}
+                required
+              />
+              <label
+                class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-baseYellow peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+              >
+                Matrix Width
+              </label>
+            </div>
+            <div class="relative z-0 w-full mb-5 group">
+              <input
+                type="text"
+                class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-baseYellow  focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                placeholder=" "
+                required
+                onChange={(e)=>setHeight(e.target.value)}
+                value={height}
+              />
+              <label
+                class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-baseYellow peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+              >
+                Matrix Height
+              </label>
+            </div>
+          </div>
+          <div class="relative z-0 w-full mb-5 group">
+            <input
+              class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-baseYellow focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+              placeholder=" "
+              required
+              onChange={(e)=>setNum(e.target.value)}
+              value={num}
+            />
+            <label
+              class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-baseYellow peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+            >
+              Number of Sequences
+            </label>
+          </div>
+          <div class="relative z-0 w-full mb-5 group">
+            <input
+              class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-baseYellow focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+              placeholder=" "
+              required
+              onChange={(e)=>setSeqSize(e.target.value)}
+              value={seqSize}
+            />
+            <label
+              class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-baseYellow peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+            >
+              Maximum Sequence Size
+            </label>
+          </div>
+        </form>
       </div>
 
       <button
-        onClick={handleUpload}
+        onClick={handleInput}
         className="font-semibold text-xl mt-4 py-4 px-6 border-2 bg-no-repeat bg-left bg-[length:0%] bg-gradient-to-r from-yellow-200 to-baseYellow hover:bg-[length:100%]  hover:text-black hover:border-black border-baseYellow rounded-2xl hover:scale-105 transition-all ease-in-out duration-500"
       >
         Solve
@@ -382,19 +411,45 @@ export default function FileUpload() {
         </div>
       </div>
       <Loading isLoading={isLoading} />
-      {isCompleted && <div id="popup-modal" tabindex="-1" class="flex overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-                <div class="relative p-4 w-full max-w-md max-h-full">
-                    <div class="relative flex flex-col justify-center items-center bg-white rounded-lg shadow dark:bg-zinc-900 border-2 border-baseYellow">
-                        <ReactTyped className="text-2xl font-bold py-4 mt-4" strings={['Loading Completed']} typeSpeed={40}/>
-                        <div role="status" className="p-12 mt-4">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-24 h-24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                            </svg>
-                        </div>
-                        <button class="px-3 py-1 my-5 w-[40%] font-semibold leading-none text-center rounded-full hover:scale-105 transition-all ease-in-out duration-200 dark:bg-baseYellow dark:text-black" onClick={()=>setCompleted(false)}>Close</button>
-                    </div>
-                </div>
-            </div>}
+      {isCompleted && (
+        <div
+          id="popup-modal"
+          tabindex="-1"
+          class="flex overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
+        >
+          <div class="relative p-4 w-full max-w-md max-h-full">
+            <div class="relative flex flex-col justify-center items-center bg-white rounded-lg shadow dark:bg-zinc-900 border-2 border-baseYellow">
+              <ReactTyped
+                className="text-2xl font-bold py-4 mt-4"
+                strings={["Loading Completed"]}
+                typeSpeed={40}
+              />
+              <div role="status" className="p-12 mt-4">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-24 h-24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                  />
+                </svg>
+              </div>
+              <button
+                class="px-3 py-1 my-5 w-[40%] font-semibold leading-none text-center rounded-full hover:scale-105 transition-all ease-in-out duration-200 dark:bg-baseYellow dark:text-black"
+                onClick={() => setCompleted(false)}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

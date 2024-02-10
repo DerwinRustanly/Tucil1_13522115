@@ -9,7 +9,9 @@ export default function Menu(){
                 <Link to={"/fileupload"}>
                     <button className="border-2 p-4 rounded-xl text-lg border-baseYellow hover:scale-105 bg-no-repeat bg-left bg-[length:0%] bg-gradient-to-r from-yellow-200 to-baseYellow py-4 px-6 hover:bg-[length:100%]  hover:text-black hover:border-black transition-all ease-in-out duration-500 ">File Upload</button>
                 </Link>
-                <button className="border-2 p-4 rounded-xl text-lg border-baseYellow hover:scale-105 bg-no-repeat bg-left bg-[length:0%] bg-gradient-to-r from-yellow-200 to-baseYellow py-4 px-6 hover:bg-[length:100%]  hover:text-black hover:border-black transition-all ease-in-out duration-500 ">Input Manually</button>
+                <Link to={"/inputmanual"}>
+                    <button className="border-2 p-4 rounded-xl text-lg border-baseYellow hover:scale-105 bg-no-repeat bg-left bg-[length:0%] bg-gradient-to-r from-yellow-200 to-baseYellow py-4 px-6 hover:bg-[length:100%]  hover:text-black hover:border-black transition-all ease-in-out duration-500 ">Input Manually</button>
+                </Link>
             </div>
         </div>
     )
