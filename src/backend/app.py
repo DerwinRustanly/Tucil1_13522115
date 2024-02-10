@@ -95,8 +95,8 @@ def save_file():
     buffer = data.get('buffer')
     coordinates = data.get('coordinates')
     duration = data.get('duration')
-    if file == "" or reward == None or buffer == [] or coordinates == []:
-        return jsonify({'error': 'Missing filename, reward, buffer, or coordinates'}), 400
+    if file == "" or reward == None:
+        return jsonify({'error': 'Missing filename and rewards'}), 400
     file = "../../test/output/"+file
     with open(file, 'w') as savefile:
         savefile.write(str(reward)+"\n")
