@@ -68,3 +68,18 @@ Repositori ini mensimulasikan algoritma penyelesaian dari permainan meretas Brea
 3. Apabila pengguna memilih metode unggah file txt (**Upload File**), pengguna akan diminta untuk mengunggah file dengan format yang telah disediakan pada laman tersebut, dengan cara menekan kolom unggah yang tersedia. Setelah pengguna berhasil mengunggah, laman akan menampilkan nama file yang telah diunggah, kemudian pengguna dapat menekan tombol **Solve** untuk mendapatkan solusi dari permainan Breach Protocol.
 4. Apabila pengguna memilih metode masukan secara manual, pengguna akan diarahkan ke laman yang berisi *form* dengan komponen, jumlah token yang akan diinput, token yang valid, ukuran buffer, ukuran matriks (jumlah baris dan kolom), jumlah sekuens, serta ukuran maksimal sekuens. Setelah pengguna mengisi *form* tersebut, pengguna dapat menekan tombol **Solve** dan program akan secara otomatis menghasilkan matriks dan sekuens secara acak berdasarkan *form* masukan pengguna, dan solusi dari permainan akan ditampilkan.
 5. Setelah solusi permainan ditampilkan, pengguna dapat menyimpan solusi permainan dalam file txt dengan cara menekan tombol **Save Result**, kemudian pengguna akan diminta untuk memberi masukan berupa nama file output yang akan disimpan.
+
+## Dokumentasi Program
+1. Tampilan Awal
+    ![home](img/home.png)
+2. Tampilan Pilihan Metode Input
+    ![menu](img/menu.png)
+3. Tampilan File Upload
+    ![fileupload](img/fileupload.png)  
+4. Tampilan Input Manual secara acak
+    ![inputmanual](img/inputmanual.png)
+5. Tampilan Hasil Eksekusi Program
+    ![results](img/results.png)
+6. Tampilan Fitur Simpan File
+    ![save](img/save.png)
+
